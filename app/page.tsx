@@ -1,7 +1,22 @@
 import ProjectCard from "@/components/ProjectCard";
-import { CONTENTFUL_CONTENT_TYPES } from "@/lib/constants";
+import { CONTENTFUL_CONTENT_TYPES, SITE_URL } from "@/lib/constants";
 import { contentfulClient } from "@/lib/contentful";
 import { Project } from "@/types/project";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pedro Tomás — Portfolio",
+  description:
+    "Full-stack developer portfolio showcasing projects built with Next.js, Contentful, and modern web technologies.",
+  openGraph: {
+    title: "Pedro Tomás — Portfolio",
+    description:
+      "Full-stack developer portfolio showcasing projects built with Next.js, Contentful, and modern web technologies.",
+    url: SITE_URL,
+    siteName: "Pedro Tomás Portfolio",
+    type: "website",
+  },
+};
 
 export default async function Home() {
   const entries = await contentfulClient.getEntries({

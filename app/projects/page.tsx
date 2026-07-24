@@ -2,6 +2,12 @@ import ProjectCard from "@/components/ProjectCard";
 import { CONTENTFUL_CONTENT_TYPES } from "@/lib/constants";
 import { contentfulClient } from "@/lib/contentful";
 import { Project } from "@/types/project";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects — Pedro Tomás",
+  description: "All projects by Pedro Tomás.",
+};
 
 export default async function Projects() {
   const entries = await contentfulClient.getEntries({

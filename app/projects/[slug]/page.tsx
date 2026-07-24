@@ -1,7 +1,8 @@
 import RichTextRenderer from "@/components/RichTextRenderer";
-import { CONTENTFUL_CONTENT_TYPES } from "@/lib/constants";
+import { CONTENTFUL_CONTENT_TYPES, SITE_URL } from "@/lib/constants";
 import { contentfulClient, getImageUrl } from "@/lib/contentful";
 import { Project } from "@/types/project";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -12,6 +13,41 @@ export async function generateStaticParams() {
     select: ["fields.slug"],
   });
   return entries.items.map((item) => ({ slug: item.fields.slug as string }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const entries = await contentfulClient.getEntries({
+    content_type: CONTENTFUL_CONTENT_TYPES.PROJECT,
+    "fields.slug": slug,
+    limit: 1,
+  });
+
+  const project = entries.items[0]?.fields as unknown as Project;
+
+  if (!project) {
+    return { title: "Project not found" };
+  }
+
+  const imageUrl = project.coverImage?.fields.file
+    ? getImageUrl(project.coverImage.fields.file.url)
+    : undefined;
+
+  return {
+    title: `${project.title} — Pedro Tomás`,
+    description: project.summary,
+    openGraph: {
+      title: project.title,
+      description: project.summary,
+      url: `${SITE_URL}/projects/${project.slug}`,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+  };
 }
 
 export default async function ProjectDetailsPage({
