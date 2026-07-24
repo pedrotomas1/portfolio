@@ -23,7 +23,7 @@ export interface Project {
   techStack: string[];
   role: string;
   liveUrl?: string;
-  githubUrl?: string;
+  repoUrl: string;
   featured: boolean;
   order: number;
 }
