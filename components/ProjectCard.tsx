@@ -10,7 +10,7 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="block rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+      className="block rounded-lg border border-border bg-muted overflow-hidden hover:border-accent/50 transition-colors"
     >
       {image && imageDimensions && (
         <Image
@@ -22,13 +22,15 @@ export default function ProjectCard({ project }: { project: Project }) {
         />
       )}
       <div className="p-4">
-        <h3 className="text-lg font-semibold">{project.title}</h3>
-        <p className="text-sm text-gray-600 mt-1">{project.summary}</p>
-        <div className="flex flex-wrap gap-1 mt-2">
+        <h3 className="text-lg font-semibold text-foreground">
+          {project.title}
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">{project.summary}</p>
+        <div className="flex flex-wrap gap-1 mt-3">
           {project.techStack.map((tech) => (
             <span
               key={tech}
-              className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+              className="text-xs bg-background border border-border text-muted-foreground px-2 py-0.5 rounded"
             >
               {tech}
             </span>

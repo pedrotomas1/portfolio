@@ -1,3 +1,5 @@
+import { Document } from "@contentful/rich-text-types";
+
 export interface ContentfulImageAsset {
   fields: {
     title: string;
@@ -17,8 +19,7 @@ export interface Project {
   title: string;
   slug: string;
   summary: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  description: any; // rich text document — to be refined later
+  description: Document;
   coverImage?: ContentfulImageAsset;
   techStack: string[];
   role: string;
