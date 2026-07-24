@@ -1,25 +1,29 @@
+import ProjectCard from "@/components/ProjectCard";
 import { CONTENTFUL_CONTENT_TYPES } from "@/lib/constants";
 import { contentfulClient } from "@/lib/contentful";
+import { Project } from "@/types/project";
 
 export default async function Home() {
   const entries = await contentfulClient.getEntries({
     content_type: CONTENTFUL_CONTENT_TYPES.PROJECT,
+    "fields.featured": true,
+    order: ["fields.order"],
   });
 
-  console.log(JSON.stringify(entries.items, null, 2));
+  const projects = entries.items.map(
+    (item) => item.fields as unknown as Project,
+  );
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className=" text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Testing Contentful Integration
-          </h1>
-          <p className=" text-lg leading-7 text-zinc-600 dark:text-zinc-400">
-            Check the console for the fetched entries
-          </p>
-        </div>
-      </main>
-    </div>
+    <main className="max-w-5xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold mb-8">Pedro Tomás</h1>
+      <p className="text-gray-600 mb-12">Projetos em destaque</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {projects.map((project) => (
+          <ProjectCard key={project.slug} project={project} />
+        ))}
+      </div>
+    </main>
   );
 }
