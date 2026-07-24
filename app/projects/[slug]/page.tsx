@@ -13,7 +13,7 @@ export async function generateStaticParams() {
   return entries.items.map((item) => ({ slug: item.fields.slug as string }));
 }
 
-export default async function ProjectDetailPage({
+export default async function ProjectDetailsPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
