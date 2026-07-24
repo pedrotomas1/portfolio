@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pedro Tomás — Portfolio
 
-## Getting Started
+Personal portfolio built with Next.js (App Router) and Contentful, showcasing selected projects with a fully headless CMS-driven content structure.
 
-First, run the development server:
+🔗 **Live:** [portfolio-ptomas.vercel.app](https://portfolio-ptomas.vercel.app)
+
+---
+
+## Stack
+
+- **Framework:** Next.js 15+ (App Router, Server Components, React Compiler)
+- **Content:** Contentful (headless CMS)
+- **Styling:** Tailwind CSS (dark mode)
+- **Deployment:** Vercel
+- **Language:** TypeScript
+
+## Features
+
+- Statically generated project pages (`generateStaticParams`)
+- Rich text rendering for project case studies (`@contentful/rich-text-react-renderer`)
+- Dynamic SEO metadata per page (`generateMetadata`)
+- Auto-generated `sitemap.xml` and `robots.txt`
+- Featured vs. full project listing, editorially controlled from Contentful
+
+## Learning basis
+
+This project started from [The Net Ninja's Next.js & Contentful course](https://www.youtube.com/watch?v=A63UxsQsEbU), a great introduction to headless CMS integration with Next.js. The course is a few years old, so a chunk of this project was about identifying what's changed since — and applying it.
+
+### What was updated from the original course
+
+The course used the **Pages Router** (`getStaticProps`, `getStaticPaths`), which was the standard at the time. Since then, the **App Router** has become the recommended approach for new projects. Key changes applied here:
+
+| Then (course)                             | Now (this project)                               |
+| ----------------------------------------- | ------------------------------------------------ |
+| Pages Router (`pages/`)                   | App Router (`app/`)                              |
+| `getStaticProps` / `getStaticPaths`       | `generateStaticParams` + async Server Components |
+| `next/head` for SEO                       | `generateMetadata` API                           |
+| `domains` config for images               | `remotePatterns` config                          |
+| No official cache guidance for App Router | Deliberate cache strategy (see below)            |
+| Styled JSX                                | Tailwind CSS                                     |
+
+The Contentful modeling concepts (content types, rich text, asset handling) remained fully valid — headless CMS fundamentals don't really age.
+
+## Content model (Contentful)
+
+**Project**
+
+- `title`, `slug`, `summary`, `description` (rich text)
+- `coverImage` (required asset)
+- `techStack` (list), `role`
+- `liveUrl`, `repoUrl`
+- `featured` (boolean), `order` (number)
+
+## Cache & revalidation strategy
+
+Content is served statically at build time. Content updates in Contentful require a manual redeploy on Vercel to go live — a deliberate choice to avoid noisy, unintended rebuilds while both code and content are actively evolving. A Contentful webhook → Vercel Deploy Hook would be the natural next step to automate this once the project stabilizes.
+
+## Running locally
+
+```bash
+git clone https://github.com/pedrotomas1/portfolio.git
+cd portfolio
+npm install
+```
+
+Create a `.env.local` file:
+
+```
+CONTENTFUL_SPACE_ID=your_space_id
+CONTENTFUL_ACCESS_TOKEN=your_access_token
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Roadmap / not yet included
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- About me section
+- On-demand revalidation via webhook
+- Project gallery (multiple images per case study)
